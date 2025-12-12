@@ -1,22 +1,298 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hayat'a Özel</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Romantik Anlar — Daha Canlı</title>
+  <style>
+    :root{
+      --bg-1: #fff5f7;
+      --bg-2: #fff0f3;
+      --accent: #ff6b9a;
+      --muted: #6b4a48;
+      --card: rgba(255,255,255,0.9);
+      --glass: rgba(255,255,255,0.6);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+      background: radial-gradient(1200px 400px at 10% 10%, #ffeef6 0%, transparent 20%), linear-gradient(180deg,var(--bg-1),var(--bg-2));
+      color: #3b2a2a;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      overflow-x:hidden;
+    }
+
+    header{
+      padding:48px 20px 36px;
+      text-align:center;
+      position:relative;
+    }
+    .title{
+      font-size:clamp(28px,4.5vw,48px);
+      letter-spacing:0.6px;
+      margin:0;
+      font-weight:700;
+      color:#5b2b36;
+    }
+    .subtitle{
+      margin-top:10px;
+      color:var(--muted);
+      font-size:clamp(14px,1.8vw,18px);
+    }
+
+    /* container */
+    .wrap{max-width:1100px;margin:30px auto;padding:18px}
+
+    /* cards */
+    .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+    @media (max-width:820px){.grid{grid-template-columns:1fr}}
+
+    .card{
+      background:var(--card);
+      border-radius:16px;padding:20px;box-shadow:0 6px 22px rgba(91,43,54,0.08);backdrop-filter: blur(6px);
+    }
+    h2{margin:0 0 12px;font-size:20px;color:#4a2c2a}
+    p{margin:0;color:#5b4443;line-height:1.6}
+
+    /* heart gallery */
+    .hearts-row{display:flex;flex-wrap:wrap;gap:12px}
+    .pill{background:linear-gradient(135deg,#fff,#ffd7e4);padding:10px 14px;border-radius:999px;box-shadow:0 6px 14px rgba(255,107,154,0.12)}
+
+    /* animated floating hearts (background) */
+    .hearts-bg{position:fixed;left:0;top:0;width:100%;height:100%;pointer-events:none;overflow:hidden;z-index:0}
+    .hearts-bg i{position:absolute;width:28px;height:28px;background:var(--accent);transform:translate(-50%,-50%) rotate(45deg);border-radius:4px 4px 0 0;}
+    .hearts-bg i:after,.hearts-bg i:before{content:'';position:absolute;width:28px;height:28px;background:var(--accent);border-radius:50%;}
+    .hearts-bg i:before{left:0;top:-14px}
+    .hearts-bg i:after{left:-14px;top:0}
+
+    @keyframes floatUp{0%{transform: translateY(0) scale(1);opacity:1}100%{transform: translateY(-120vh) scale(.6);opacity:0}}
+
+    /* clickable heart spawn */
+    .click-hint{font-size:13px;color:var(--muted);margin-top:10px;text-align:center}
+
+    /* typewriter love note */
+    .love-box{display:flex;flex-direction:column;gap:12px}
+    .love-input{width:100%;padding:12px;border-radius:10px;border:1px solid rgba(91,43,54,0.08);font-size:15px}
+    .love-btn{padding:10px 14px;border-radius:10px;background:linear-gradient(90deg,#ff9bb7,#ff6b9a);color:white;border:none;cursor:pointer;font-weight:600}
+    .love-output{min-height:48px;padding:12px;border-radius:10px;background:linear-gradient(180deg,rgba(255,235,243,0.6),rgba(255,245,248,0.6));border:1px dashed rgba(91,43,54,0.06);font-size:16px}
+
+    /* quote carousel */
+    .carousel{position:relative;overflow:hidden;padding:8px}
+    .slides{display:flex;transition:transform .45s cubic-bezier(.22,.9,.27,1)}
+    .slide{min-width:100%;padding:20px}
+    .dots{display:flex;gap:8px;justify-content:center;margin-top:12px}
+    .dot{width:10px;height:10px;border-radius:50%;background:rgba(91,43,54,0.12);cursor:pointer}
+    .dot.active{background:var(--accent)}
+
+    /* footer */
+    footer{padding:24px;text-align:center;color:var(--muted);font-size:14px}
+
+    /* small helpers */
+    .center{display:flex;align-items:center;justify-content:center}
+
+    /* mobile tweaks */
+    @media (max-width:420px){header{padding:28px 12px} .wrap{padding:8px}}
+
+    /* subtle pulse CTA */
+    .cta{display:inline-block;padding:10px 16px;border-radius:999px;background:linear-gradient(90deg,#ff6b9a,#ff9bb7);color:white;font-weight:700;box-shadow:0 10px 30px rgba(255,107,154,0.12);transform-origin:center}
+
+  </style>
 </head>
 <body>
-<div id="splash">
-  <h1 class="title">Hayat</h1>
-</div>
+  <div class="hearts-bg" aria-hidden="true"></div>
+  <header>
+    <h1 class="title">Romantik Anlar — Kalbe Dokunan Bir Site</h1>
+    <p class="subtitle">Dokun, hisset, gönder. Her etkileşim bir kalbe umut ekler.</p>
+    <div class="click-hint">Ekrana dokun veya tıkla — kalpler seni takip etsin ✨</div>
+  </header>
 
-<div class="content hidden">
-  <h2 class="typing">Sen benim en güzel tesadüfümsün 💗</h2>
-  <button id="surpriseBtn">Sürpriz Mesaj</button>
-  <p id="surpriseText"></p>
-</div>
+  <main class="wrap" role="main">
+    <div class="grid">
+      <section class="card" style="z-index:2">
+        <h2>💌 Hemen Bir Aşk Notu Yaz</h2>
+        <div class="love-box">
+          <input class="love-input" id="nameInput" placeholder="Sevdiğinin ismini yaz... (ör: 'Leyla')" />
+          <button class="love-btn" id="makeNote">Sihirli Notu Oluştur</button>
+          <div id="loveOutput" class="love-output" aria-live="polite"></div>
+        </div>
+      </section>
 
-<script src="script.js"></script>
+      <section class="card" style="z-index:2">
+        <h2>🌷 Romantik Sözler</h2>
+        <div class="hearts-row" id="phrases">
+          <div class="pill">"Gülüşün gündüzleri bile geceme taşır."</div>
+          <div class="pill">"Sen yanımdayken en zor şarkılar bile melodik olur."</div>
+          <div class="pill">"Ellerinin sıcaklığı, dünyanın en güvenli limanı."</div>
+          <div class="pill">"Bir bakışınla bütün eksikler tamamlanır."</div>
+        </div>
+      </section>
+
+      <section class="card" style="grid-column:1/3">
+        <h2>✨ Duygu Karuseli</h2>
+        <div class="carousel">
+          <div class="slides" id="slides">
+            <div class="slide">"Birlikte okunan kitaplar, gelecekteki anıların temelidir." — gizemli bir yürek</div>
+            <div class="slide">"Sessizlikte bile seninle konuşuyorum — dünya dinliyor."</div>
+            <div class="slide">"Eğer sevgi bir şarkıysa, sen en güzel nakaratsın."</div>
+          </div>
+          <div class="dots" id="dots"></div>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>🌙 Geceye Mektup</h2>
+        <p>Gecenin en sessiz anında bir umut yazarım: Kalbin hep aydınlık kalsın, yıldızlar senin kadar parlak.</p>
+      </section>
+
+      <section class="card">
+        <h2>🎁 Küçük Etkileşimler</h2>
+        <p>Sayfada her tıklama bir kalp yaratır. Uzun süre tıklarsan rüzgâr gibi bir yağmur olur — ama sakin ol, her kalp birer dilek fısıldar.</p>
+        <div style="margin-top:12px" class="center"><button class="cta" id="toggleHearts">Kalp Yağmuru Başlat</button></div>
+      </section>
+
+    </div>
+  </main>
+
+  <footer>
+    Bu romantik köşeyi ziyaret ettiğin için teşekkürler — hislerin hep taze kalsın. 💖
+  </footer>
+
+  <script>
+    /* ---------- Floating background hearts setup ---------- */
+    const heartsBg = document.querySelector('.hearts-bg');
+    function spawnBgHeart(xPercent){
+      const i = document.createElement('i');
+      const size = 14 + Math.random()*36; // 14-50 px
+      i.style.width = size + 'px';
+      i.style.height = size + 'px';
+      i.style.left = (xPercent || Math.random()*100) + '%';
+      i.style.top = 100 + Math.random()*20 + '%';
+      i.style.opacity = Math.random()*0.7 + 0.3;
+      i.style.transform = 'translate(-50%,-50%) rotate(' + (Math.random()*60-30) + 'deg)';
+      const dur = 10 + Math.random()*18; // seconds
+      i.style.animation = `floatUp ${dur}s linear forwards`;
+      heartsBg.appendChild(i);
+      // cleanup
+      setTimeout(()=>{ i.remove() }, (dur+0.6)*1000);
+    }
+    // spawn some slow background hearts periodically
+    let bgInterval = setInterval(()=>{ spawnBgHeart(); }, 1200);
+
+    /* ---------- Click-to-spawn interactive hearts ---------- */
+    function spawnClickHeart(x,y){
+      const h = document.createElement('div');
+      h.className = 'pill';
+      h.textContent = '❤';
+      h.style.position = 'fixed';
+      h.style.left = x + 'px';
+      h.style.top = y + 'px';
+      h.style.transform = 'translate(-50%,-50%)';
+      h.style.pointerEvents='none';
+      h.style.fontSize = '18px';
+      h.style.opacity = '1';
+      h.style.transition = 'transform 1.6s ease-out, opacity 1.6s ease-out';
+      document.body.appendChild(h);
+      requestAnimationFrame(()=>{
+        h.style.transform = 'translate(-50%,-220%) scale(0.6)';
+        h.style.opacity = '0';
+      });
+      setTimeout(()=>h.remove(),1700);
+    }
+
+    document.addEventListener('click', e => {
+      // ignore clicks on buttons/inputs to not disrupt UI
+      const tag = e.target.tagName.toLowerCase();
+      if(['input','button','textarea','a'].includes(tag)) return;
+      spawnClickHeart(e.clientX,e.clientY);
+    });
+
+    /* ---------- Toggle automatic heart rain ---------- */
+    let raining = false; const toggleBtn = document.getElementById('toggleHearts');
+    let rainInterval;
+    toggleBtn.addEventListener('click', ()=>{
+      raining = !raining;
+      toggleBtn.textContent = raining ? 'Kalp Yağmuru Durdur' : 'Kalp Yağmuru Başlat';
+      if(raining){
+        rainInterval = setInterval(()=>{
+          spawnBgHeart(Math.random()*100);
+        }, 200);
+      } else { clearInterval(rainInterval); }
+    });
+
+    /* ---------- Love note generator with typewriter effect ---------- */
+    const makeNoteBtn = document.getElementById('makeNote');
+    const nameInput = document.getElementById('nameInput');
+    const loveOutput = document.getElementById('loveOutput');
+
+    function typeText(target, text, speed=30){
+      target.textContent = '';
+      let i=0;
+      return new Promise(res=>{
+        const t = setInterval(()=>{
+          if(i>=text.length){ clearInterval(t); res(); return }
+          target.textContent += text[i++];
+        }, speed);
+      });
+    }
+
+    function craftNote(name){
+      if(!name) name = 'Sevdiğim';
+      const notes = [
+        `Sevgili ${name},
+Gülüşünle sabah güneşimi çalmış gibisin — her günüm biraz daha aydınlanıyor.`,
+        `${name},
+Seninle geçen her an bir şiir; kelimeler bile birbirine sarılıyor.`,
+        `Canım ${name},
+Birlikte bir yudum sessizlik bile tarifsiz bir mutluluk oluyor.`
+      ];
+      // pick random and add a tiny extra
+      const pick = notes[Math.floor(Math.random()*notes.length)];
+      return pick + '
+
+Seni düşünen bir kalpten...';
+    }
+
+    makeNoteBtn.addEventListener('click', async ()=>{
+      makeNoteBtn.disabled = true;
+      const note = craftNote(nameInput.value.trim());
+      await typeText(loveOutput, note, 24);
+      // simple localStorage save of last note
+      try{ localStorage.setItem('lastLoveNote', note) }catch(e){}
+      makeNoteBtn.disabled=false;
+    });
+
+    // restore last note if exists
+    try{
+      const last = localStorage.getItem('lastLoveNote');
+      if(last) loveOutput.textContent = last;
+    }catch(e){}
+
+    /* ---------- Simple carousel logic ---------- */
+    const slides = document.getElementById('slides');
+    const texts = slides.children; const dotsCont = document.getElementById('dots');
+    let cur = 0;
+    function refreshDots(){
+      dotsCont.innerHTML='';
+      for(let i=0;i<texts.length;i++){
+        const d = document.createElement('div'); d.className='dot'+(i===cur? ' active':'');
+        d.addEventListener('click', ()=>{ cur=i; render(); })
+        dotsCont.appendChild(d);
+      }
+    }
+    function render(){ slides.style.transform = `translateX(-${cur*100}%)`; refreshDots(); }
+    render();
+    setInterval(()=>{ cur = (cur+1)%texts.length; render(); }, 5200);
+
+    /* ---------- Accessibility: reduce motion if user prefers ---------- */
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    if(mq.matches){ clearInterval(bgInterval); clearInterval(rainInterval); }
+
+    /* ---------- Initialize a few background hearts for ambiance ---------- */
+    for(let i=0;i<6;i++) setTimeout(()=>spawnBgHeart(Math.random()*100), i*600);
+
+  </script>
 </body>
 </html>
